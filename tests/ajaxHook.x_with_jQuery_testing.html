@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		<button id="ajaxButton1" value="Test1" title="a">Test</button>
+		<button id="ajaxButton2" value="Test2" title="b">Test2</button>
+		<button id="ajaxButton3" value="Test3" title="c">Test3</button>
+		<script type="text/javascript" src="../libraries/requireX.js"></script>
+		<script type="text/javascript">
+			require([
+				'../builds/ajaxHook.x.min.js',
+				'../libraries/jquery.js'
+			]).then(function(AjaxHook){
+				/**
+				 *	Bind Ajax event
+				 */
+				var counter = 0,
+					aborts = 0;
+			
+				AjaxHook.bindAjaxSuccess(function(){
+					console.log('Request done: '+(++counter));
+				});
+				
+				AjaxHook.bindAjaxOnabort(function(){
+					console.log('Request aborted: '+(++aborts));
+				});
+				
+				AjaxHook.bindAjaxOpen(function(){
+					console.log('Open');
+				});
+				
+				AjaxHook.bindAjaxSend(function(){
+					console.log('Sending');
+				});
+			
+				/**
+				 *	Demo Script
+				 */
+				$('button').click(function(){
+					$.ajax({
+						url : 'ajax_testing_response.html?'+$(this).attr('title'),
+						success : function(){
+							console.log('native success');
+						}
+					});
+				});
+			});
+		</script>
+	</body>
+</html>

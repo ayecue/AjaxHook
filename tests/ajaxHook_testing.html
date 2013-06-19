@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		<button id="ajaxButton1" value="Test1" title="Test1">Test</button>
+		<button id="ajaxButton2" value="Test2" title="Test2">Test2</button>
+		<button id="ajaxButton3" value="Test3" title="Test3">Test3</button>
+		<script type="text/javascript" src="../builds/ajaxHook.min.js"></script>
+		<script type="text/javascript">
+			(function () {
+				/**
+				 *	Bind Ajax event
+				 */
+				var counter = 0,
+					aborts = 0;
+			
+				bindAjaxSuccess(function(){
+					console.log('Request done: '+(++counter));
+				});
+				
+				bindAjaxOnabort(function(){
+					console.log('Request aborted: '+(++aborts));
+				});
+				
+				bindAjaxOpen(function(){
+					console.log('Open');
+				});
+				
+				bindAjaxSend(function(){
+					console.log('Sending');
+				});
+			
+				/**
+				 *	Demo Script
+				 */
+				var httpRequest;
+				
+				document.getElementById("ajaxButton1").onclick = function () {
+					makeRequest('ajax_testing_response.html?a');
+				};
+				
+				document.getElementById("ajaxButton2").onclick = function () {
+					makeRequest('ajax_testing_response.html?b');
+				};
+				
+				document.getElementById("ajaxButton3").onclick = function () {
+					makeRequest('ajax_testing_response.html?c');
+				};
+				
+				function createRequest(){
+					if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+						httpRequest = new XMLHttpRequest();
+					} else if (window.ActiveXObject) { // IE
+						try {
+							httpRequest = new ActiveXObject("Msxml2.XMLHTTP");
+						} catch (e) {
+							try {
+								httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+							} catch (e) {}
+						}
+					}
+
+					if (!httpRequest) {
+						alert('Giving up :( Cannot create an XMLHTTP instance');
+						return false;
+					}
+					
+					return httpRequest;
+				}
+
+				function makeRequest(url) {				
+					httpRequest = createRequest();
+					httpRequest.onreadystatechange = alertContents;
+					httpRequest.open('POST', url);
+					httpRequest.send();
+				}
+
+				function alertContents() {
+					if (httpRequest.readyState === 4) {
+						if (httpRequest.status === 200) {
+							console.log('Native success');
+						}
+					}
+				}
+			})();
+		</script>
+	</body>
+</html>
