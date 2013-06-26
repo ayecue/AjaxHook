@@ -1,11 +1,49 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<style type="text/css">
+			html, body {
+				background: #CCC;
+				height: 100%;
+				width: 100%;
+				margin: 0;
+				padding: 0;
+			}
+			button {
+				font-family: Arial, Helvetica, sans-serif;
+				font-size: 14px;
+				color: #050505;
+				padding: 10px 20px;
+				background: -moz-linear-gradient(top,#b8b8b8 0%,#ffffff);
+				background: -webkit-gradient(linear, left top, left bottom, from(#b8b8b8),to(#ffffff));
+				border: 1px solid #000000;
+				-moz-box-shadow:0px 1px 3px rgba(000,000,000,0.5),inset 0px 0px 1px rgba(255,255,255,0.7);
+				-webkit-box-shadow:0px 1px 3px rgba(000,000,000,0.5),inset 0px 0px 1px rgba(255,255,255,0.7);
+				box-shadow:0px 1px 3px rgba(000,000,000,0.5),inset 0px 0px 1px rgba(255,255,255,0.7);
+				text-shadow:0px -1px 0px rgba(000,000,000,0.4),0px 1px 0px rgba(255,255,255,0.3);
+				cursor: pointer;
+			}
+			button:hover {
+				background: -moz-linear-gradient(top,#c8c8c8 0%,#ffffff);
+				background: -webkit-gradient(linear, left top, left bottom, from(#c8c8c8),to(#ffffff));
+			}
+			#output {
+				margin: 10px 0 0;
+				background: #000;
+				border: 2px solid #AAA;
+				overflow: auto;
+				height: 90%;
+			}
+			#output p {
+				color: #FFF;
+			}
+		</style>
 	</head>
 	<body>
 		<button id="ajaxButton1" value="Test1" title="a">Test</button>
 		<button id="ajaxButton2" value="Test2" title="b">Test2</button>
 		<button id="ajaxButton3" value="Test3" title="c">Test3</button>
+		<div id="output"></div>
 		<script type="text/javascript" src="../builds/ajaxHook.min.js"></script>
 		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<script type="text/javascript">
@@ -16,20 +54,25 @@
 				var counter = 0,
 					aborts = 0;
 			
-				bindAjaxSuccess(function(){
-					console.log('Request done: '+(++counter));
+				function print(text)
+				{
+					$('#output').prepend('<p>'+text+'</p>');
+				}
+			
+				AjaxHook.bindAjaxSuccess(function(){
+					print('>> Request done: '+(++counter));
 				});
 				
-				bindAjaxOnabort(function(){
-					console.log('Request aborted: '+(++aborts));
+				AjaxHook.bindAjaxOnabort(function(){
+					print('>> Request aborted: '+(++aborts));
 				});
 				
-				bindAjaxOpen(function(){
-					console.log('Open');
+				AjaxHook.bindAjaxOpen(function(){
+					print('>> Open');
 				});
 				
-				bindAjaxSend(function(){
-					console.log('Sending');
+				AjaxHook.bindAjaxSend(function(){
+					print('>> Sending');
 				});
 			
 				/**
